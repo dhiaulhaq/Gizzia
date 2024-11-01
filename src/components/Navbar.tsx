@@ -35,18 +35,22 @@ export default function Component() {
                     </Link>
                 </nav>
                 <div className="flex gap-1 justify-end">
-                    <Button
-                        className="text-[#e7eae5] hover:text-[#c4f073]"
-                        variant="ghost"
-                    >
-                        Login
-                    </Button>
-                    <Button
-                        className="bg-transparent border-[#B4C6A6] text-[#e7eae5] hover:bg-[#B4C6A6] hover:text-[#1B2E20]"
-                        variant="outline"
-                    >
-                        Sign up
-                    </Button>
+                    <Link href="/login">
+                        <Button
+                            className="text-[#e7eae5] hover:text-[#c4f073]"
+                            variant="ghost"
+                        >
+                            Login
+                        </Button>
+                    </Link>
+                    <Link href="/register">
+                        <Button
+                            className="bg-transparent border-[#B4C6A6] text-[#e7eae5] hover:bg-[#B4C6A6] hover:text-[#1B2E20]"
+                            variant="outline"
+                        >
+                            Sign up
+                        </Button>
+                    </Link>
                 </div>
             </div>
         </header>
