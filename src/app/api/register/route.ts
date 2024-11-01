@@ -5,7 +5,7 @@ import {
   getUserByUsername,
 } from "@/db/models/user";
 import { z } from "zod";
-import { MyResponse } from "../types.def";
+import { MyResponse } from "../../../@types/types.def";
 
 const userInputSchema = z.object({
   name: z.string(),
