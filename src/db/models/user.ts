@@ -18,7 +18,7 @@ export type UserModel = {
 
 export type UserModelCreateInput = Omit<UserModel, "_id">;
 
-const DATABASE_NAME = process.env.MONGODB_DB_NAME || "furni_you";
+const DATABASE_NAME = process.env.MONGODB_DB_NAME || "gizzia";
 const COLLECTION_USER = "Users";
 
 export const getDb = async () => {
