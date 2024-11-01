@@ -1,3 +1,4 @@
+import { NextResponse } from "next/server";
 import { Db, ObjectId } from "mongodb";
 import { getMongoClientInstance } from "../config/connection";
 import { hashText } from "../utils/hash";
@@ -8,6 +9,11 @@ export type UserModel = {
   username: string;
   email: string;
   password: string;
+  gender?: string;
+  dateOfBirth?: string;
+  imageProfileUrl?: string;
+  createdAt?: string;
+  updatedtedAt?: string;
 };
 
 export type UserModelCreateInput = Omit<UserModel, "_id">;
@@ -61,6 +67,47 @@ export const getUserById = async (id: string) => {
   )) as UserModel;
 
   return user;
+};
+
+export const updateUser = async (id: string, req: Request) => {
+  try {
+    const db = await getDb();
+    const objectId = new ObjectId(id);
+
+    const body = (await req.json()) as Partial<UserModel>;
+    const { name, username, email, gender, dateOfBirth, imageProfileUrl } =
+      body;
+
+    const result = await db.collection(COLLECTION_USER).updateOne(
+      { _id: objectId },
+      {
+        $set: {
+          name,
+          username,
+          email,
+          gender,
+          dateOfBirth,
+          imageProfileUrl,
+        },
+      }
+    );
+
+    if (result.matchedCount === 0) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    const updatedUser = await db
+      .collection(COLLECTION_USER)
+      .findOne({ _id: objectId }, { projection: { password: 0 } });
+
+    return NextResponse.json(updatedUser);
+  } catch (error) {
+    console.error("Error updating user:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
 };
 
 export const getUserByEmail = async (email: string) => {
