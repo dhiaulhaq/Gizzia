@@ -6,6 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Mail, Lock } from "lucide-react";
+import { z } from "zod";
+import { signToken } from "@/lib/jwt";
+import { compare } from "bcryptjs";
+import { cookies } from "next/headers";
 
 export default function Component() {
   const [email, setEmail] = useState("");
@@ -13,7 +17,6 @@ export default function Component() {
 
   return (
     <div className="relative flex min-h-screen">
-      {/* Bagian kanan (gambar background yang penuh) */}
       <div className="absolute inset-0">
         <img
           src="/gizi-seimbang.jpg"
@@ -22,7 +25,6 @@ export default function Component() {
         />
       </div>
 
-      {/* Bagian kiri (form login) dengan latar belakang semi-transparan */}
       <div className="relative z-10 flex-1 flex items-center justify-center p-8 bg-black bg-opacity-60">
         <div className="w-full max-w-md space-y-8">
           <div className="space-y-2 text-white">
