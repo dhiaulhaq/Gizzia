@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@radix-ui/react-avatar": "^1.1.1",
     "@ai-sdk/google": "^0.0.55",
     "@radix-ui/react-checkbox": "^1.1.2",
     "@radix-ui/react-slot": "^1.1.0",
