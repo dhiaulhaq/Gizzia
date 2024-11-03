@@ -40,7 +40,7 @@ export default function Navbar() {
           </Link>
           <Link
             className="text-[#e7eae5] hover:text-[#c4f073] transition-colors"
-            href="/healthCheck"
+            href="/health-check"
           >
             Health Check
           </Link>
