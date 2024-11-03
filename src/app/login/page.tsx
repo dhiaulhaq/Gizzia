@@ -4,16 +4,45 @@ import { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Mail, Lock } from "lucide-react";
-import { z } from "zod";
-import { signToken } from "@/lib/jwt";
-import { compare } from "bcryptjs";
-import { cookies } from "next/headers";
+import { useRouter } from "next/navigation";
 
 export default function Component() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null); // Reset error state
+
+    try {
+      const formData = new FormData();
+      formData.append("email", email);
+      formData.append("password", password);
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/login`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      if (response.ok) {
+        // Redirect to homepage if login is successful
+        router.push("/");
+      } else {
+        // Handle error by setting the error state to display it
+        const data = await response.json();
+        setError(data.error || "Login failed. Please try again.");
+      }
+    } catch (err) {
+      setError("An unexpected error occurred. Please try again.");
+      console.error(err);
+    }
+  };
 
   return (
     <div className="relative flex min-h-screen">
@@ -34,7 +63,9 @@ export default function Component() {
             </p>
           </div>
 
-          <form className="space-y-6">
+          {error && <p className="text-center text-red-500 mb-4">{error}</p>}
+
+          <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-4">
               <div className="relative">
                 <Input
@@ -64,11 +95,14 @@ export default function Component() {
                 href="/forgot-password"
                 className="text-sm text-blue-400 hover:text-blue-300"
               >
-                forgot password
+                Forgot password
               </Link>
             </div>
 
-            <Button className="w-full h-12 bg-green-700 hover:bg-green-600">
+            <Button
+              type="submit"
+              className="w-full h-12 bg-green-700 hover:bg-green-600"
+            >
               Login
             </Button>
 
@@ -76,9 +110,6 @@ export default function Component() {
               <div className="relative flex justify-center text-xs uppercase">
                 <span className="bg-transparent px-2 text-gray-300">Or</span>
               </div>
-              {/* <div className="absolute inset-0 flex items-center">
-                                <span className="w-full border-t border-gray-400" />
-                            </div> */}
             </div>
             <p className="text-center text-sm text-gray-300">
               Don't have an account?{" "}
