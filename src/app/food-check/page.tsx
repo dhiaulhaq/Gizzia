@@ -3,11 +3,8 @@
 import { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { Upload, Utensils, AlertCircle } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 
 export default function Identification() {
   const [image, setImage] = useState<string | null>(null);
@@ -69,84 +66,87 @@ export default function Identification() {
 
   return (
     <>
-      <div className="max-w-4xl mx-auto my-10">
-        <div className="text-center mb-12">
-          <div className="flex items-center justify-center mb-4">
-            <Utensils className="h-12 w-12 text-primary" />
+      <div className="min-h-screen bg-[#f8ffe6] p-10 flex justify-center">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-6">
+            <div className="flex items-center justify-center mb-4">
+              <Utensils className="h-12 w-12 text-black" />
+            </div>
+            <div className="text-center">
+              <span className="text-4xl font-bold text-black">Food </span>
+              <span className="text-4xl font-bold text-[#bcd374]">Check</span>
+            </div>
+            <p className="text-lg text-gray-600">
+              Upload a food image to get detailed nutritional information
+            </p>
           </div>
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-            Food Nutrition Analyzer
-          </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-300">
-            Upload a food image to get detailed nutritional information
-          </p>
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <Card className="p-6">
-            <div
-              {...getRootProps()}
-              className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <Card className="p-6 bg-white">
+              <div
+                {...getRootProps()}
+                className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors
                 ${
                   isDragActive
                     ? "border-primary bg-primary/5"
-                    : "border-gray-300 hover:border-primary"
+                    : "border-gray-300 hover:border-gray-400"
                 }`}
-            >
-              <input {...getInputProps()} />
-              <Upload className="h-12 w-12 mx-auto mb-4 text-gray-400" />
-              <p className="text-gray-600 dark:text-gray-300">
-                {isDragActive
-                  ? "Drop the image here"
-                  : "Drag & drop an image here, or click to select"}
-              </p>
-            </div>
-
-            {image && (
-              <div className="mt-6">
-                <img
-                  src={image}
-                  alt="Uploaded food"
-                  className="rounded-lg w-full object-cover"
-                  style={{ maxHeight: "300px" }}
-                />
+              >
+                <input {...getInputProps()} />
+                <Upload className={`h-12 w-12 mx-auto mb-4 text-gray-400`} />
+                <p className="text-gray-600">
+                  {isDragActive
+                    ? "Drop the image here"
+                    : "Drag & drop an image here, or click to select"}
+                </p>
               </div>
-            )}
-          </Card>
 
-          <Card className="p-6">
-            {analyzing ? (
-              <div className="flex items-center justify-center h-full">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-              </div>
-            ) : result ? (
-              <div className="space-y-6">
-                <div>
-                  <h3 className="text-lg font-semibold mb-2">Detected Foods</h3>
-                  <p className="text-gray-600 dark:text-gray-300">
-                    {result.labels}
-                  </p>
+              {image && (
+                <div className="mt-6">
+                  <img
+                    src={image}
+                    alt="Uploaded food"
+                    className="rounded-lg w-full object-cover"
+                    style={{ maxHeight: "300px" }}
+                  />
                 </div>
-                <div>
-                  <h3 className="text-lg font-semibold mb-2">
-                    Nutritional Analysis
-                  </h3>
-                  <div className="prose dark:prose-invert max-w-none">
-                    {result.nutrition.split("\n").map((line, index) => (
-                      <p key={index} className="mb-2">
-                        {line}
-                      </p>
-                    ))}
+              )}
+            </Card>
+
+            <Card className="p-6 bg-white">
+              {analyzing ? (
+                <div className="flex items-center justify-center h-full">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black"></div>
+                </div>
+              ) : result ? (
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="text-lg text-black font-semibold mb-2">
+                      Detected Foods
+                    </h3>
+                    <p className="text-gray-600">{result.labels}</p>
+                  </div>
+                  <div>
+                    <h3 className="text-lg text-lg text-black font-semibold mb-2">
+                      Nutritional Analysis
+                    </h3>
+                    <div className="prose max-w-none">
+                      {result.nutrition.split("\n").map((line, index) => (
+                        <p key={index} className="mb-2 text-gray-600">
+                          {line}
+                        </p>
+                      ))}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ) : (
-              <div className="flex flex-col items-center justify-center h-full text-gray-500 dark:text-gray-400">
-                <AlertCircle className="h-12 w-12 mb-4" />
-                <p>Upload an image to see the analysis</p>
-              </div>
-            )}
-          </Card>
+              ) : (
+                <div className="flex flex-col items-center justify-center h-full text-gray-500">
+                  <AlertCircle className="h-12 w-12 mb-4" />
+                  <p>Upload an image to see the analysis</p>
+                </div>
+              )}
+            </Card>
+          </div>
         </div>
       </div>
     </>
