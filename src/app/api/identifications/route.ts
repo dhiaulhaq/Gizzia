@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getUserById, updateUser } from "@/db/models/user";
-import { MyResponse } from "../types.def";
+import { MyResponse } from "@/@types/types.def";
 
 export const GET = async (
   _request: NextRequest,
