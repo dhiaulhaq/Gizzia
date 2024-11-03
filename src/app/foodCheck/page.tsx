@@ -1,158 +1,131 @@
+"use client"
+
+import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import Image from "next/image"
-import { Facebook, Twitter } from "lucide-react"
+import { Input } from "@/components/ui/input"
+import { X, Cloud } from "lucide-react"
+import { useState } from "react"
 
 export default function Component() {
+    const [dragActive, setDragActive] = useState(false)
+    const [fileUrl, setFileUrl] = useState("")
+
+    const handleDrag = (e: React.DragEvent) => {
+        e.preventDefault()
+        e.stopPropagation()
+        if (e.type === "dragenter" || e.type === "dragover") {
+            setDragActive(true)
+        } else if (e.type === "dragleave") {
+            setDragActive(false)
+        }
+    }
+
+    const handleDrop = (e: React.DragEvent) => {
+        e.preventDefault()
+        e.stopPropagation()
+        setDragActive(false)
+
+        const files = Array.from(e.dataTransfer.files)
+        if (files?.[0]) {
+            // Handle file upload here
+            console.log("Dropped files:", files)
+        }
+    }
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const files = Array.from(e.target.files || [])
+        if (files?.[0]) {
+            // Handle file upload here
+            console.log("Selected files:", files)
+        }
+    }
+
+    const handleUrlUpload = () => {
+        if (fileUrl) {
+            // Handle URL upload here
+            console.log("URL to upload:", fileUrl)
+        }
+    }
+
     return (
-        <div className="min-h-screen bg-[#f8f9e8]">
-            {/* Header */}
-            <header className="border-b border-gray-200 bg-white/50 backdrop-blur-sm">
-                <div className="container mx-auto flex h-16 items-center px-4">
-                    <div className="flex items-center gap-2">
-                        <svg
-                            className="h-6 w-6 text-blue-500"
-                            fill="none"
-                            height="24"
-                            stroke="currentColor"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            viewBox="0 0 24 24"
-                            width="24"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <path d="M12 20h9" />
-                            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
-                        </svg>
-                        <span className="text-xl font-medium text-blue-500">Result Food</span>
-                    </div>
-                </div>
-            </header>
-
-            {/* Main Content */}
-            <main className="container mx-auto px-4 py-8">
-                <div className="grid gap-8 md:grid-cols-3">
-                    {/* Left Column - Main Content */}
-                    <div className="md:col-span-2 space-y-6">
-                        <h1 className="text-4xl font-bold text-gray-900">Gado-gado</h1>
-
-                        <p className="text-gray-700">
-                            Gado-gado adalah hidangan tradisional Indonesia yang berupa salad sayuran dengan saus kacang.
-                            Hidangan ini menggabungkan sayuran segar, protein, dan karbohidrat yang dilengkapi saus kacang khas.
-                        </p>
-
+        <div className="min-h-screen bg-[#f8ffe6] p-4 flex items-center justify-center">
+            <Card className="w-full max-w-2xl bg-white">
+                <CardHeader className="relative">
+                    <button
+                        className="absolute right-4 top-4 text-gray-400 hover:text-gray-600"
+                        onClick={() => console.log("Close modal")}
+                    >
+                        <a href="/">
+                            <X className="h-5 w-5" />
+                        </a>
+                    </button>
+                    <CardTitle className="text-center">
+                        <span className="text-3xl">Food </span>
+                        <span className="text-3xl text-[#bcd374]">Check</span>
+                    </CardTitle>
+                    <p className="text-center text-gray-600">Upload photos of your food here</p>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                    {/* Drag & Drop Zone */}
+                    <div
+                        className={`relative rounded-lg border-2 border-dashed p-8 text-center ${dragActive ? "border-[#bcd374] bg-[#f8ffe6]" : "border-gray-300"
+                            }`}
+                        onDragEnter={handleDrag}
+                        onDragLeave={handleDrag}
+                        onDragOver={handleDrag}
+                        onDrop={handleDrop}
+                    >
+                        <input
+                            accept=".jpg,.png,.svg,.zip"
+                            className="absolute inset-0 w-full opacity-0 cursor-pointer"
+                            type="file"
+                            onChange={handleFileChange}
+                            multiple
+                        />
                         <div className="space-y-4">
-                            <h2 className="text-xl font-semibold text-gray-900">Komposisi Utama</h2>
-                            <div className="space-y-4">
-                                <div>
-                                    <h3 className="font-medium">1. Sayuran:</h3>
-                                    <p className="text-gray-700">Bayam, kangkung, kol, tauge, wortel, kacang panjang, kentang</p>
-                                </div>
-                                <div>
-                                    <h3 className="font-medium">2. Pelengkap Protein:</h3>
-                                    <p className="text-gray-700">Tahu, tempe, telur rebus</p>
-                                </div>
-                                <div>
-                                    <h3 className="font-medium">3. Karbohidrat:</h3>
-                                    <p className="text-gray-700">Lontong atau ketupat</p>
-                                </div>
-                                <div>
-                                    <h3 className="font-medium">4. Saus:</h3>
-                                    <p className="text-gray-700">Saus kacang yang terdiri dari kacang tanah, bawang putih, cabai, gula merah, air asam jawa, dan kecap manis</p>
-                                </div>
-                                <div>
-                                    <h3 className="font-medium">5. Tambahan Pelengkap:</h3>
-                                    <p className="text-gray-700">Bawang goreng, kerupuk, timun atau tomat</p>
-                                </div>
+                            <Cloud className="mx-auto h-12 w-12 text-gray-400" />
+                            <div className="space-y-2">
+                                <p className="text-gray-600">
+                                    Drag your file(s) or{" "}
+                                    <span className="text-blue-500 hover:underline">browse</span>
+                                </p>
+                                <p className="text-sm text-gray-500">Max 10 MB files are allowed</p>
                             </div>
                         </div>
+                    </div>
 
-                        <div className="grid gap-4 md:grid-cols-3">
-                            <Image
-                                alt="Gado-gado presentation 1"
-                                className="rounded-lg object-cover"
-                                height={200}
-                                src="/placeholder.svg"
-                                width={300}
-                            />
-                            <Image
-                                alt="Gado-gado presentation 2"
-                                className="rounded-lg object-cover"
-                                height={200}
-                                src="/placeholder.svg"
-                                width={300}
-                            />
-                            <Image
-                                alt="Gado-gado presentation 3"
-                                className="rounded-lg object-cover"
-                                height={200}
-                                src="/placeholder.svg"
-                                width={300}
-                            />
+                    <p className="text-sm text-gray-500">Only support .jpg, .png and .svg and zip files</p>
+
+                    <div className="relative">
+                        <div className="absolute inset-0 flex items-center">
+                            <div className="w-full border-t border-gray-200" />
                         </div>
-
-                        <div className="flex items-center gap-4">
-                            <span className="text-sm font-medium text-gray-700">Share with</span>
-                            <button className="rounded-full bg-gray-100 p-2 hover:bg-gray-200">
-                                <Facebook className="h-5 w-5 text-gray-600" />
-                            </button>
-                            <button className="rounded-full bg-gray-100 p-2 hover:bg-gray-200">
-                                <Twitter className="h-5 w-5 text-gray-600" />
-                            </button>
+                        <div className="relative flex justify-center">
+                            <span className="bg-white px-4 text-sm text-gray-500">OR</span>
                         </div>
                     </div>
 
-                    {/* Right Column - Nutritional Information */}
-                    <div className="space-y-6">
-                        <Card className="bg-[#f0f5e5]">
-                            <CardHeader>
-                                <CardTitle>Informasi Gizi</CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <h3 className="font-medium">Kandungan Gizi</h3>
-                                        <ul className="mt-2 space-y-2 text-sm">
-                                            <li>Serat</li>
-                                            <li>Vitamin A & C</li>
-                                            <li>Protein</li>
-                                            <li>Lemak Sehat</li>
-                                            <li>Karbohidrat</li>
-                                            <li>Kalori</li>
-                                        </ul>
-                                    </div>
-                                    <div>
-                                        <h3 className="font-medium">Manfaat Utama</h3>
-                                        <ul className="mt-2 space-y-2 text-sm">
-                                            <li>Mendukung pencernaan dan rasa kenyang</li>
-                                            <li>Mendukung kesehatan mata dan imun tubuh</li>
-                                            <li>Pembentukan dan perbaikan jaringan</li>
-                                            <li>Mendukung kesehatan jantung</li>
-                                            <li>Sumber energi</li>
-                                            <li>Sekitar 300-400 kalori per porsi</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </CardContent>
-                        </Card>
-
-                        <Card className="bg-[#1f2937] text-white">
-                            <CardHeader>
-                                <CardTitle>Nilai Gizi Rata-rata (per porsi)</CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <ul className="space-y-2">
-                                    <li>Kalori: 300-400 kalori</li>
-                                    <li>Protein: 10-15 gram</li>
-                                    <li>Karbohidrat: 35-45 gram</li>
-                                    <li>Lemak: 15-20 gram</li>
-                                    <li>Serat: 6-8 gram</li>
-                                </ul>
-                            </CardContent>
-                        </Card>
+                    {/* URL Upload */}
+                    <div className="space-y-2">
+                        <h3 className="font-medium">Upload from URL</h3>
+                        <div className="flex gap-2">
+                            <Input
+                                className="flex-1"
+                                placeholder="Add file URL"
+                                type="url"
+                                value={fileUrl}
+                                onChange={(e) => setFileUrl(e.target.value)}
+                            />
+                            <Button
+                                className="bg-[#bcd374] hover:bg-[#a8bf60] text-white"
+                                onClick={handleUrlUpload}
+                            >
+                                Upload
+                            </Button>
+                        </div>
                     </div>
-                </div>
-            </main>
+                </CardContent>
+            </Card>
         </div>
     )
 }

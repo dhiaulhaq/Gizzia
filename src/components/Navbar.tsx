@@ -17,21 +17,21 @@ export default function Component() {
                     </Link>
                     <Link
                         className="text-[#e7eae5] hover:text-[#c4f073] transition-colors"
-                        href="/health-calculator"
+                        href="/healthCheck"
                     >
-                        Health Calculator
+                        Health Check
                     </Link>
                     <Link
                         className="text-[#e7eae5] hover:text-[#c4f073] transition-colors"
-                        href="/food-check"
+                        href="/foodCheck"
                     >
                         Food Check
                     </Link>
                     <Link
                         className="text-[#e7eae5] hover:text-[#c4f073] transition-colors"
-                        href="/news-gizi"
+                        href="/forum"
                     >
-                        News Gizi
+                        Forum
                     </Link>
                 </nav>
                 <div className="flex gap-1 justify-end">
