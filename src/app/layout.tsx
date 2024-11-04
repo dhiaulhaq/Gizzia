@@ -6,6 +6,8 @@ import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -30,6 +32,17 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const tokenCookie = cookies().get("token");
+  const token = tokenCookie ? tokenCookie.value : undefined; // Ekstraksi nilai string
+
+  async function handleFormLogout() {
+    "use server";
+    if (token) {
+      cookies().delete("token");
+      redirect("/login");
+    }
+  }
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body
@@ -41,7 +54,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Navbar />
+          <Navbar token={token} handleFormLogout={handleFormLogout} />
           {children}
           <Toaster />
           <Footer />

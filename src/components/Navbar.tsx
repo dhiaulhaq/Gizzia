@@ -5,7 +5,12 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 
-export default function Navbar() {
+interface NavbarProps {
+  token: string | undefined;
+  handleFormLogout: () => void;
+}
+
+export default function Navbar({ token, handleFormLogout }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -57,12 +62,60 @@ export default function Navbar() {
             Forum
           </Link>
 
-          {/* Mobile Login and Sign up buttons */}
+          {/* Mobile Login and Sign up / Logout buttons */}
           {isOpen && (
             <div className="flex flex-col items-center gap-2 md:hidden bg-[#1B2E20]">
+              {token ? (
+                <form action={handleFormLogout}>
+                  <Button
+                    className="text-[#e7eae5] hover:text-[#c4f073] w-full"
+                    type="submit"
+                    variant="ghost"
+                  >
+                    Logout
+                  </Button>
+                </form>
+              ) : (
+                <>
+                  <Link href="/login">
+                    <Button
+                      className="text-[#e7eae5] hover:text-[#c4f073] w-full"
+                      variant="ghost"
+                    >
+                      Login
+                    </Button>
+                  </Link>
+                  <Link href="/register">
+                    <Button
+                      className="bg-transparent border-[#B4C6A6] text-[#e7eae5] hover:bg-[#B4C6A6] hover:text-[#1B2E20] w-full"
+                      variant="outline"
+                    >
+                      Sign up
+                    </Button>
+                  </Link>
+                </>
+              )}
+            </div>
+          )}
+        </nav>
+
+        {/* Desktop Login and Sign up / Logout buttons */}
+        <div className="hidden md:flex gap-2">
+          {token ? (
+            <form onSubmit={handleFormLogout}>
+              <Button
+                className="text-[#e7eae5] hover:text-[#c4f073]"
+                type="submit"
+                variant="ghost"
+              >
+                Logout
+              </Button>
+            </form>
+          ) : (
+            <>
               <Link href="/login">
                 <Button
-                  className="text-[#e7eae5] hover:text-[#c4f073] w-full"
+                  className="text-[#e7eae5] hover:text-[#c4f073]"
                   variant="ghost"
                 >
                   Login
@@ -70,34 +123,14 @@ export default function Navbar() {
               </Link>
               <Link href="/register">
                 <Button
-                  className="bg-transparent border-[#B4C6A6] text-[#e7eae5] hover:bg-[#B4C6A6] hover:text-[#1B2E20] w-full"
+                  className="bg-transparent border-[#B4C6A6] text-[#e7eae5] hover:bg-[#B4C6A6] hover:text-[#1B2E20]"
                   variant="outline"
                 >
                   Sign up
                 </Button>
               </Link>
-            </div>
+            </>
           )}
-        </nav>
-
-        {/* Login and Sign up buttons */}
-        <div className="hidden md:flex gap-2">
-          <Link href="/login">
-            <Button
-              className="text-[#e7eae5] hover:text-[#c4f073]"
-              variant="ghost"
-            >
-              Login
-            </Button>
-          </Link>
-          <Link href="/register">
-            <Button
-              className="bg-transparent border-[#B4C6A6] text-[#e7eae5] hover:bg-[#B4C6A6] hover:text-[#1B2E20]"
-              variant="outline"
-            >
-              Sign up
-            </Button>
-          </Link>
         </div>
       </div>
     </header>
