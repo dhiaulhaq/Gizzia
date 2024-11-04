@@ -102,9 +102,9 @@ export default function Navbar({ token, handleFormLogout }: NavbarProps) {
         {/* Desktop Login and Sign up / Logout buttons */}
         <div className="hidden md:flex gap-2">
           {token ? (
-            <form onSubmit={handleFormLogout}>
+            <form action={handleFormLogout}>
               <Button
-                className="text-[#e7eae5] hover:text-[#c4f073]"
+                className="text-[#e7eae5] hover:text-[#c4f073] w-full"
                 type="submit"
                 variant="ghost"
               >
