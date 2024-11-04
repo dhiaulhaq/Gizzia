@@ -32,6 +32,31 @@ export const getLikes = async () => {
   return likes;
 };
 
+export const getLikesByPostId = async (postId: string) => {
+  const db = await getDb();
+
+  const likeFound = await db
+    .collection(COLLECTION_LIKE)
+    .find({ postId: new ObjectId(postId) })
+    .toArray();
+
+  return likeFound;
+};
+
+export const getLikeByPostIdAndUserId = async (
+  postId: string,
+  userId: string
+) => {
+  const db = await getDb();
+  const postObjectId = new ObjectId(postId);
+  const userObjectId = new ObjectId(userId);
+
+  const agg = [{ $match: { postId: postObjectId, userId: userObjectId } }];
+
+  const post = await db.collection(COLLECTION_LIKE).aggregate(agg).toArray();
+  return post[0] as LikeModel;
+};
+
 export const createLike = async (like: LikeModelCreateInput) => {
   const likeInsert: LikeModelCreateInput = {
     ...like,

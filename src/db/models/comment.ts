@@ -33,6 +33,31 @@ export const getComments = async () => {
   return comments;
 };
 
+export const getCommentsByPostId = async (postId: string) => {
+  const db = await getDb();
+
+  const commentFound = await db
+    .collection(COLLECTION_COMMENT)
+    .find({ postId: new ObjectId(postId) })
+    .toArray();
+
+  return commentFound;
+};
+
+export const getCommentByPostIdAndUserId = async (
+  postId: string,
+  userId: string
+) => {
+  const db = await getDb();
+  const postObjectId = new ObjectId(postId);
+  const userObjectId = new ObjectId(userId);
+
+  const agg = [{ $match: { postId: postObjectId, userId: userObjectId } }];
+
+  const post = await db.collection(COLLECTION_COMMENT).aggregate(agg).toArray();
+  return post[0] as CommentModel;
+};
+
 export const createComment = async (comment: CommentModelCreateInput) => {
   const commentInsert: CommentModelCreateInput = {
     ...comment,
@@ -48,18 +73,18 @@ export const createComment = async (comment: CommentModelCreateInput) => {
   return result;
 };
 
-export const deleteCommentById = async (postId: string, userId: string) => {
+export const deleteCommentById = async (id: string, userId: string) => {
   const db = await getDb();
 
   const commentFound = await db
     .collection(COLLECTION_COMMENT)
-    .find({ postId: new ObjectId(postId), userId: new ObjectId(userId) })
+    .find({ _id: new ObjectId(id), userId: new ObjectId(userId) })
     .toArray();
 
   if (commentFound.length === 0) throw new Error("Not Found");
 
   await db.collection(COLLECTION_COMMENT).deleteOne({
-    postId: new ObjectId(postId),
+    _id: new ObjectId(id),
     userId: new ObjectId(userId),
   });
 

@@ -16,7 +16,10 @@ export type PostModel = {
   updatedAt?: Date;
 };
 
-export type PostModelCreateInput = Omit<PostModel, "_id">;
+export type PostModelCreateInput = Omit<
+  PostModel,
+  "_id" | "Likes" | "Comments"
+>;
 
 const DATABASE_NAME = process.env.MONGODB_DB_NAME || "gizzia";
 const COLLECTION_POST = "Posts";
@@ -89,6 +92,37 @@ export const getPostById = async (id: string) => {
 
   const agg = [
     { $match: { _id: objectId } },
+    {
+      $lookup: {
+        from: "Likes",
+        localField: "_id",
+        foreignField: "postId",
+        as: "Likes",
+      },
+    },
+    {
+      $lookup: {
+        from: "Comments",
+        localField: "_id",
+        foreignField: "postId",
+        as: "Comments",
+      },
+    },
+    { $unwind: { path: "$Likes", preserveNullAndEmptyArrays: true } },
+    { $unwind: { path: "$Comments", preserveNullAndEmptyArrays: true } },
+  ];
+
+  const post = await db.collection(COLLECTION_POST).aggregate(agg).toArray();
+  return post[0] as PostModel;
+};
+
+export const getPostByIdAndUserId = async (id: string, userId: string) => {
+  const db = await getDb();
+  const objectId = new ObjectId(id);
+  const userObjectId = new ObjectId(userId);
+
+  const agg = [
+    { $match: { _id: objectId, userId: userObjectId } },
     {
       $lookup: {
         from: "Likes",
