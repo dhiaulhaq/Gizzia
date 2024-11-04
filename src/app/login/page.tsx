@@ -1,46 +1,58 @@
-"use client";
-
-import { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Mail, Lock } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
+import { z } from "zod";
+import { cookies } from "next/headers";
 
-export default function Component() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
+export default function LoginComponent() {
+  const handleFormAction = async (formData: FormData) => {
+    "use server";
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null); // Reset error state
+    const loginInputSchema = z.object({
+      email: z.string().email(),
+      password: z.string(),
+    });
 
-    try {
-      const formData = new FormData();
-      formData.append("email", email);
-      formData.append("password", password);
+    const email = formData.get("email");
+    const password = formData.get("password");
 
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/login`,
-        {
-          method: "POST",
-          body: formData,
-        }
+    const parsedData = loginInputSchema.safeParse({
+      email,
+      password,
+    });
+
+    if (!parsedData.success) {
+      const errPath = parsedData.error.issues[0].path[0];
+      const errMessage = parsedData.error.issues[0].message;
+      const errFinalMessage = `${errPath} - ${errMessage}`;
+
+      return redirect(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/login?error=${errFinalMessage}`
       );
+    }
 
-      if (response.ok) {
-        // Redirect to homepage if login is successful
-        router.push("/");
-      } else {
-        // Handle error by setting the error state to display it
-        const data = await response.json();
-        setError(data.error || "Login failed. Please try again.");
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/login`,
+      {
+        method: "POST",
+        body: formData,
       }
-    } catch (err) {
-      setError("An unexpected error occurred. Please try again.");
-      console.error(err);
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      cookies().set("token", data.token, {
+        httpOnly: true,
+        secure: false,
+        expires: new Date(Date.now() + 1000 * 60 * 60),
+        sameSite: "strict",
+      });
+
+      return redirect(`${process.env.NEXT_PUBLIC_BASE_URL}/`);
+    } else {
+      throw new Error("Login failed. Please try again.");
     }
   };
 
@@ -63,17 +75,15 @@ export default function Component() {
             </p>
           </div>
 
-          {error && <p className="text-center text-red-500 mb-4">{error}</p>}
-
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form action={handleFormAction} method="POST" className="space-y-6">
             <div className="space-y-4">
               <div className="relative">
                 <Input
                   className="pl-10 h-12 text-white bg-[#e7fadf] border border-gray-400 placeholder-gray-300 focus:ring-2 focus:ring-[#d0f5bb]"
                   placeholder="Enter your email"
                   type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  name="email"
+                  required
                 />
                 <Mail className="absolute left-3 top-3.5 h-5 w-5 text-gray-400" />
               </div>
@@ -83,8 +93,8 @@ export default function Component() {
                   className="pl-10 h-12 text-white bg-[#e7fadf] border border-gray-400 placeholder-gray-300 focus:ring-2 focus:ring-[#d0f5bb]"
                   placeholder="Password"
                   type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  name="password"
+                  required
                 />
                 <Lock className="absolute left-3 top-3.5 h-5 w-5 text-gray-400" />
               </div>
