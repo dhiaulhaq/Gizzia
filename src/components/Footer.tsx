@@ -22,7 +22,7 @@ export default function Component() {
               <p className="text-gray-300">Copyright © 2024 Gizzia.</p>
               <p className="text-gray-300">All rights reserved</p>
             </div>
-            <div className="flex space-x-4">
+            {/* <div className="flex space-x-4">
               <Link href="#" className="hover:text-gray-300">
                 <Instagram className="h-5 w-5" />
                 <span className="sr-only">Instagram</span>
@@ -45,36 +45,36 @@ export default function Component() {
                 <Youtube className="h-5 w-5" />
                 <span className="sr-only">YouTube</span>
               </Link>
-            </div>
+            </div> */}
           </div>
 
           {/* Company Section */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Company</h3>
+            <h3 className="text-lg font-semibold">Services</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="#" className="hover:text-gray-300">
-                  About us
+                <Link href="/" className="hover:text-gray-300">
+                  Home
                 </Link>
               </li>
               <li>
-                <Link href="#" className="hover:text-gray-300">
-                  Blog
+                <Link href="/health-check" className="hover:text-gray-300">
+                  Health Check
                 </Link>
               </li>
               <li>
-                <Link href="#" className="hover:text-gray-300">
-                  Contact us
+                <Link href="/food-check" className="hover:text-gray-300">
+                  Food Check
                 </Link>
               </li>
               <li>
-                <Link href="#" className="hover:text-gray-300">
-                  Pricing
+                <Link href="/forum" className="hover:text-gray-300">
+                  Forum
                 </Link>
               </li>
               <li>
-                <Link href="#" className="hover:text-gray-300">
-                  Testimonials
+                <Link href="/profile" className="hover:text-gray-300">
+                  Profile
                 </Link>
               </li>
             </ul>
@@ -82,31 +82,16 @@ export default function Component() {
 
           {/* Support Section */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Support</h3>
+            <h3 className="text-lg font-semibold">Support Us!</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="#" className="hover:text-gray-300">
-                  Help center
+                <Link href="/donation" className="hover:text-gray-300">
+                  Donate :3
                 </Link>
               </li>
               <li>
                 <Link href="#" className="hover:text-gray-300">
-                  Terms of service
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="hover:text-gray-300">
-                  Legal
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="hover:text-gray-300">
-                  Privacy policy
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="hover:text-gray-300">
-                  Status
+                  Advertise your business!
                 </Link>
               </li>
             </ul>
@@ -131,9 +116,6 @@ export default function Component() {
                 Got To Top
                 <ArrowUp className="ml-2 h-4 w-4" />
               </Button>
-              <p className="text-sm text-gray-300">
-                © 2024 Gizzia. All rights reserved.
-              </p>
             </div>
           </div>
         </div>

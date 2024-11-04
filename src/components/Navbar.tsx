@@ -66,15 +66,25 @@ export default function Navbar({ token, handleFormLogout }: NavbarProps) {
           {isOpen && (
             <div className="flex flex-col items-center gap-2 md:hidden bg-[#1B2E20]">
               {token ? (
-                <form action={handleFormLogout}>
-                  <Button
-                    className="text-[#e7eae5] hover:text-[#c4f073] w-full"
-                    type="submit"
-                    variant="ghost"
-                  >
-                    Logout
-                  </Button>
-                </form>
+                <>
+                  <Link href="/profile">
+                    <Button
+                      className="text-[#e7eae5] hover:text-[#c4f073] w-full"
+                      variant="ghost"
+                    >
+                      Profile
+                    </Button>
+                  </Link>
+                  <form action={handleFormLogout}>
+                    <Button
+                      className="text-[#e7eae5] hover:text-[#c4f073] w-full"
+                      type="submit"
+                      variant="ghost"
+                    >
+                      Logout
+                    </Button>
+                  </form>
+                </>
               ) : (
                 <>
                   <Link href="/login">
@@ -102,15 +112,25 @@ export default function Navbar({ token, handleFormLogout }: NavbarProps) {
         {/* Desktop Login and Sign up / Logout buttons */}
         <div className="hidden md:flex gap-2">
           {token ? (
-            <form action={handleFormLogout}>
-              <Button
-                className="text-[#e7eae5] hover:text-[#c4f073] w-full"
-                type="submit"
-                variant="ghost"
-              >
-                Logout
-              </Button>
-            </form>
+            <>
+              <Link href="/profile">
+                <Button
+                  className="text-[#e7eae5] hover:text-[#c4f073] w-full"
+                  variant="ghost"
+                >
+                  Profile
+                </Button>
+              </Link>
+              <form action={handleFormLogout}>
+                <Button
+                  className="text-[#e7eae5] hover:text-[#c4f073] w-full"
+                  type="submit"
+                  variant="ghost"
+                >
+                  Logout
+                </Button>
+              </form>
+            </>
           ) : (
             <>
               <Link href="/login">
