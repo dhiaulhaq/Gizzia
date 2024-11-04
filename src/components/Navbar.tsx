@@ -6,7 +6,7 @@ export default function Component() {
         <header className="bg-[#1B2E20] w-full">
             <div className="container flex h-16 items-center justify-between px-4 md:px-6">
                 <Link className="flex items-center gap-2 text-lg font-semibold text-white" href="/">
-                    <span className="font-bold text-2xl ml-20">Gizzia</span>
+                    <img src="/logo.png" className="w-32 h-auto ml-20 mt-4" />
                 </Link>
                 <nav className="hidden md:flex gap-6 ml-80">
                     <Link

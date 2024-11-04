@@ -11,24 +11,7 @@ export default function Component() {
                 <div className="container mx-auto max-w-6xl px-4 py-8">
                     {/* Header */}
                     <div className="mb-8 flex items-center gap-2">
-                        <div className="rounded-lg bg-blue-100 p-2">
-                            <svg
-                                className="h-6 w-6 text-blue-500"
-                                fill="none"
-                                height="24"
-                                stroke="currentColor"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                                viewBox="0 0 24 24"
-                                width="24"
-                                xmlns="http://www.w3.org/2000/svg"
-                            >
-                                <path d="M12 20h9" />
-                                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
-                            </svg>
-                        </div>
-                        <h2 className="text-xl font-medium text-blue-500">Food Articles</h2>
+                        <h2 className="text-xl font-medium text-blue-500">Gizzia Articles</h2>
                     </div>
 
                     {/* Article Grid */}
@@ -39,7 +22,7 @@ export default function Component() {
                                 alt="Grilled meat skewers with rice"
                                 className="rounded-lg object-cover"
                                 height={600}
-                                src="/placeholder.svg"
+                                src="/gado2.webp"
                                 width={800}
                             />
                         </div>
@@ -63,21 +46,21 @@ export default function Component() {
                                     alt="Healthy bowl"
                                     className="rounded-lg object-cover"
                                     height={200}
-                                    src="/placeholder.svg"
+                                    src="/gado2.webp"
                                     width={200}
                                 />
                                 <Image
                                     alt="Smoothie bowl"
                                     className="rounded-lg object-cover"
                                     height={200}
-                                    src="/placeholder.svg"
+                                    src="/gado2.webp"
                                     width={200}
                                 />
                                 <Image
                                     alt="Matcha drinks"
                                     className="rounded-lg object-cover"
                                     height={200}
-                                    src="/placeholder.svg"
+                                    src="/gado2.webp"
                                     width={200}
                                 />
                             </div>
