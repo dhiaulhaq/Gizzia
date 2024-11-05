@@ -12,8 +12,10 @@ export const middleware = async (request: NextRequest) => {
     console.log(request.method, request.url);
   }
 
-  // Middleware for /api/forum
-  if (request.url.includes("/api/forum")) {
+  if (
+    request.url.includes("/api/forum") ||
+    request.url.includes("/api/users")
+  ) {
     const token = cookies().get("token");
 
     if (!token) {
@@ -36,21 +38,17 @@ export const middleware = async (request: NextRequest) => {
     });
   }
 
-  // Middleware for /forum page
-  if (request.url.includes("/forum")) {
+  if (request.url.includes("/forum") || request.url.includes("/profile")) {
     const token = cookies().get("token");
 
     if (!token) {
-      // Redirect to login if token is missing
       return NextResponse.redirect(new URL("/login", request.url));
     }
 
-    // Verify the token
     const tokenData = await verifyTokenJose<{ id: string; email: string }>(
       token.value
     );
 
-    // Continue to the /forum page if token is valid
     return NextResponse.next();
   }
 

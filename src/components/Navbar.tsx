@@ -16,12 +16,9 @@ export default function Navbar({ token, handleFormLogout }: NavbarProps) {
   return (
     <header className="bg-[#1B2E20] w-full">
       <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
-        <Link
-          className="flex items-center text-lg font-semibold text-white"
-          href="/"
-        >
-          <span className="font-bold text-2xl">Gizzia</span>
-        </Link>
+        <Link className="flex items-center gap-2 text-lg font-semibold text-white" href="/">
+                    <img src="/logo.png" className="w-32 h-auto ml-20 mt-4" />
+                </Link>
 
         {/* Hamburger Icon for Mobile */}
         <button
@@ -66,15 +63,25 @@ export default function Navbar({ token, handleFormLogout }: NavbarProps) {
           {isOpen && (
             <div className="flex flex-col items-center gap-2 md:hidden bg-[#1B2E20]">
               {token ? (
-                <form action={handleFormLogout}>
-                  <Button
-                    className="text-[#e7eae5] hover:text-[#c4f073] w-full"
-                    type="submit"
-                    variant="ghost"
-                  >
-                    Logout
-                  </Button>
-                </form>
+                <>
+                  <Link href="/profile">
+                    <Button
+                      className="text-[#e7eae5] hover:text-[#c4f073] w-full"
+                      variant="ghost"
+                    >
+                      Profile
+                    </Button>
+                  </Link>
+                  <form action={handleFormLogout}>
+                    <Button
+                      className="text-[#e7eae5] hover:text-[#c4f073] w-full"
+                      type="submit"
+                      variant="ghost"
+                    >
+                      Logout
+                    </Button>
+                  </form>
+                </>
               ) : (
                 <>
                   <Link href="/login">
@@ -102,15 +109,25 @@ export default function Navbar({ token, handleFormLogout }: NavbarProps) {
         {/* Desktop Login and Sign up / Logout buttons */}
         <div className="hidden md:flex gap-2">
           {token ? (
-            <form onSubmit={handleFormLogout}>
-              <Button
-                className="text-[#e7eae5] hover:text-[#c4f073]"
-                type="submit"
-                variant="ghost"
-              >
-                Logout
-              </Button>
-            </form>
+            <>
+              <Link href="/profile">
+                <Button
+                  className="text-[#e7eae5] hover:text-[#c4f073] w-full"
+                  variant="ghost"
+                >
+                  Profile
+                </Button>
+              </Link>
+              <form action={handleFormLogout}>
+                <Button
+                  className="text-[#e7eae5] hover:text-[#c4f073] w-full"
+                  type="submit"
+                  variant="ghost"
+                >
+                  Logout
+                </Button>
+              </form>
+            </>
           ) : (
             <>
               <Link href="/login">
