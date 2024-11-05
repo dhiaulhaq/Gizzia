@@ -3,26 +3,28 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowUp, Instagram, Twitter, Youtube } from "lucide-react";
+import ClientLottieReact from "./lottie-client/ClientLottieReact";
+import Chat from "../../public/Animation - 1730805186441.json"
 
 export default function Component() {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-    return (
-        <footer className="bg-[#1B2E20] text-white py-12">
-            <div className="container mx-auto px-4">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-                    {/* Logo and Social Section */}
-                    <div className="space-y-6"> {/* Kurangi atau hapus `space-y` */}
-                        <Link href="/" className="inline-block mb-1"> {/* Gunakan margin yang lebih kecil */}
-                            <img src="/logo 3.png" className="w-32" />
-                        </Link>
-                        <div className="space-y-0.5"> {/* Perkecil jarak antar elemen di dalam div */}
-                            <p className="text-gray-300">Copyright © 2024 GiziKite.</p>
-                            <p className="text-gray-300">All rights reserved</p>
-                        </div>
-                    </div>
+  return (
+    <footer className="bg-[#1B2E20] text-white py-12">
+      <div className="container mx-auto px-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          {/* Logo and Social Section */}
+          <div className="space-y-6"> {/* Kurangi atau hapus `space-y` */}
+            <Link href="/" className="inline-block mb-1"> {/* Gunakan margin yang lebih kecil */}
+              <img src="/logo 3.png" className="w-32" />
+            </Link>
+            <div className="space-y-0.5"> {/* Perkecil jarak antar elemen di dalam div */}
+              <p className="text-gray-300">Copyright © 2024 Gizzia.</p>
+              <p className="text-gray-300">All rights reserved</p>
+            </div>
+          </div>
 
           {/* Company Section */}
           <div className="space-y-4">
@@ -72,25 +74,29 @@ export default function Component() {
               </li>
             </ul>
           </div>
-                    {/* Chatbot and Go to Top Section */}
-                    <div className="flex flex-col items-end justify-between">
-                        <div className="fixed bottom-4 right-4 z-50">
-                            <a href="link-ke-chatbot">
-                                <img src="/chatbot-removebg-preview.png" className="w-24 h-24" alt="Chatbot Icon" />
-                            </a>
-                        </div>
-                        <div className="space-y-8">
-                            <Button
-                                onClick={scrollToTop}
-                                className="bg-[#2C472F] hover:bg-[#3A5A3E] text-white rounded-full px-6"
-                            >
-                                Got To Top
-                                <ArrowUp className="ml-2 h-4 w-4" />
-                            </Button>
-                        </div>
-                    </div>
-                </div>
+          {/* Chatbot and Go to Top Section */}
+          <div className="flex flex-col items-end justify-between">
+            <div className="fixed bottom-5 right-1 z-50 flex flex-col items-center">
+              <a href="/chatbot" className="m-0 p-0">
+                <ClientLottieReact
+                  animationData={Chat}
+                  style={{ width: '150px', height: '150px' }}
+                />
+              </a>
+              <p className="absolute bottom-0 m-0 p-0 text-[#77aca4] font-extrabold text-lg text-center">GizzAI</p>
             </div>
-        </footer >
-    )
+            <div className="space-y-8">
+              <Button
+                onClick={scrollToTop}
+                className="bg-[#2C472F] hover:bg-[#3A5A3E] text-white rounded-full px-6"
+              >
+                Got To Top
+                <ArrowUp className="ml-2 h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer >
+  )
 }
