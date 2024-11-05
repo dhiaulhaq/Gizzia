@@ -8,7 +8,12 @@ import {
 } from "@stripe/react-stripe-js";
 import convertToSubcurrency from "@/lib/convertToSubcurrency";
 
-const CheckoutPage = ({ amount }: { amount: number }) => {
+interface CheckoutPageProps {
+  amount: number;
+  description: string;
+}
+
+const CheckoutPage = ({ amount, description }: CheckoutPageProps) => {
   const stripe = useStripe();
   const elements = useElements();
   const [errorMessage, setErrorMessage] = useState<string>();
@@ -30,38 +35,66 @@ const CheckoutPage = ({ amount }: { amount: number }) => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoading(true);
-
+  
     if (!stripe || !elements) {
       return;
     }
-
+  
     const { error: submitError } = await elements.submit();
-
+  
     if (submitError) {
       setErrorMessage(submitError.message);
       setLoading(false);
       return;
     }
-
-    const { error } = await stripe.confirmPayment({
-      elements,
-      clientSecret,
-      confirmParams: {
-        return_url: `http://www.localhost:3000/payment-success?amount=${amount}`,
-      },
-    });
-
-    if (error) {
-      // This point is only reached if there's an immediate error when
-      // confirming the payment. Show the error to your customer (for example, payment details incomplete)
-      setErrorMessage(error.message);
-    } else {
-      // The payment UI automatically closes with a success animation.
-      // Your customer is redirected to your `return_url`.
+  
+    // Create donation record before confirming payment
+    try {
+      const donationResponse = await fetch("/api/donation", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          amount: amount,
+          description: description,
+          emailProvider: "user@example.com", // Replace with actual email from user data or cookies
+          paymentDate: new Date().toISOString(),
+        }),
+      });
+  
+      if (!donationResponse.ok) {
+        const errorData = await donationResponse.json();
+        setErrorMessage(`Failed to create donation: ${errorData.error}`);
+        console.error("Donation creation error:", errorData);
+        setLoading(false); // Stop loading if donation creation fails
+        return;
+      }
+  
+      // Proceed to confirm payment after successful donation creation
+      const { error } = await stripe.confirmPayment({
+        elements,
+        clientSecret,
+        confirmParams: {
+          return_url: `http://www.localhost:3000/payment-success?amount=${amount}`,
+        },
+      });
+  
+      if (error) {
+        // Handle error in payment confirmation
+        setErrorMessage(error.message);
+      } else {
+        // Payment confirmed successfully
+        console.log("Payment confirmed successfully!");
+      }
+    } catch (donationError) {
+      setErrorMessage("An error occurred while creating the donation.");
+      console.error("Donation API call error:", donationError);
     }
-
+  
     setLoading(false);
   };
+  
 
   if (!clientSecret || !stripe || !elements) {
     return (
