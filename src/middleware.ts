@@ -12,12 +12,11 @@ export const middleware = async (request: NextRequest) => {
     console.log(request.method, request.url);
   }
 
-    if (
-      request.url.includes("/api/forum") ||
-      request.url.includes("/api/users") ||
-      request.url.includes("/api/donation")
-
-    ) {
+  if (
+    request.url.includes("/api/forum") ||
+    request.url.includes("/api/users") ||
+    request.url.includes("/api/donation")
+  ) {
     const token = cookies().get("token");
 
     if (!token) {
@@ -40,7 +39,11 @@ export const middleware = async (request: NextRequest) => {
     });
   }
 
-  if (request.url.includes("/forum") || request.url.includes("/profile") || request.url.includes("/donation"))  {
+  if (
+    request.url.includes("/forum") ||
+    request.url.includes("/profile") ||
+    request.url.includes("/donation")
+  ) {
     const token = cookies().get("token");
 
     if (!token) {

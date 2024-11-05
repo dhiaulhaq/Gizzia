@@ -8,6 +8,8 @@ import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import ClientLottieReact from "@/components/lottie-client/ClientLottieReact";
+import Chat from "../../public/Animation - 1730805186441.json";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,8 +28,8 @@ export const metadata: Metadata = {
   title: "Gizzia",
   description: "Your nutrition helper",
   icons: {
-    icon: "/logo 3.png"
-  }
+    icon: "/logo 3.png",
+  },
 };
 
 export default function RootLayout({
@@ -59,6 +61,19 @@ export default function RootLayout({
         >
           <Navbar token={token} handleFormLogout={handleFormLogout} />
           {children}
+          {token && (
+            <div className="fixed bottom-5 right-1 z-50 flex flex-col items-center">
+              <a href="/chatbot" className="m-0 p-0">
+                <ClientLottieReact
+                  animationData={Chat}
+                  style={{ width: "150px", height: "150px" }}
+                />
+              </a>
+              <p className="absolute bottom-0 m-0 p-0 text-[#77aca4] font-extrabold text-lg text-center">
+                GizzAI
+              </p>
+            </div>
+          )}
           <Toaster />
           <Footer />
         </ThemeProvider>
