@@ -11,7 +11,7 @@ if (process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY === undefined) {
 }
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
 
-export default function DonationPage() {
+export default function Home() {
   const [amount, setAmount] = useState<number>(0.99);
   const [error, setError] = useState<string | null>(null);
 
@@ -19,7 +19,7 @@ export default function DonationPage() {
     const newAmount = parseFloat(event.target.value);
     
     if (isNaN(newAmount) || newAmount <= 0) {
-      setError("Amount must be greater than $0.00");
+      setError("Amount must be greater than $0.00.");
     } else if (newAmount < 0.5) {
       setError("Amount must be at least $0.50 to proceed.");
     } else {
