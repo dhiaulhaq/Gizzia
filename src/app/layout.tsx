@@ -25,6 +25,9 @@ const geistMono = localFont({
 export const metadata: Metadata = {
   title: "Gizzia",
   description: "Your nutrition helper",
+  icons: {
+    icon: "/logo 3.png"
+  }
 };
 
 export default function RootLayout({
