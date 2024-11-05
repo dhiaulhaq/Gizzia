@@ -48,6 +48,28 @@ const CheckoutPage = ({ amount, description }: CheckoutPageProps) => {
       return;
     }
   
+    let userEmail;
+  
+    // Fetch user email from the API
+    try {
+      const userResponse = await fetch("/api/auth/me");
+      if (!userResponse.ok) {
+        const errorData = await userResponse.json();
+        setErrorMessage(`Failed to fetch user data: ${errorData.error}`);
+        console.error("User data fetch error:", errorData);
+        setLoading(false);
+        return;
+      }
+  
+      const userData = await userResponse.json();
+      userEmail = userData.user.email; // Get email from user data
+    } catch (error) {
+      setErrorMessage("An error occurred while fetching user data.");
+      console.error("User data API call error:", error);
+      setLoading(false);
+      return;
+    }
+  
     // Create donation record before confirming payment
     try {
       const donationResponse = await fetch("/api/donation", {
@@ -58,7 +80,7 @@ const CheckoutPage = ({ amount, description }: CheckoutPageProps) => {
         body: JSON.stringify({
           amount: amount,
           description: description,
-          emailProvider: "user@example.com", // Replace with actual email from user data or cookies
+          emailProvider: userEmail, // Use the actual email from user data
           paymentDate: new Date().toISOString(),
         }),
       });
