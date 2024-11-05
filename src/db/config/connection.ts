@@ -1,4 +1,4 @@
-import { MongoClient } from "mongodb";
+import { MongoClient, Db } from "mongodb";
 
 const connectionString = process.env.MONGODB_CONNECTION_STRING || "";
 
@@ -15,4 +15,12 @@ export const getMongoClientInstance = async () => {
   }
 
   return client;
+};
+
+export const getDb = async (): Promise<Db> => {
+  if (!client) {
+    client = new MongoClient(connectionString);
+    await client.connect();
+  }
+  return client.db(process.env.MONGODB_DB_NAME || "gizzia");
 };
