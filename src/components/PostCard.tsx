@@ -30,13 +30,13 @@ export default function PostCard({ post, onLikeToggle }: PostCardProps) {
               className="object-cover"
             />
             <AvatarFallback className="flex items-center justify-center text-lg font-bold text-white bg-[#113d1e]">
-              {post?.user.name ? post.user.name[0] : "U"}
+              {post?.user.username ? post.user.username[0] : "U"}
             </AvatarFallback>
           </Avatar>
           <div>
             <h2 className="text-xl font-semibold text-black">{post.title}</h2>
             <p className="text-sm text-gray-500">
-              Posted by {post.user.name} •{" "}
+              Posted by {post.user.username} •{" "}
               {formatDistanceToNow(new Date(post.createdAt))} ago
             </p>
           </div>
