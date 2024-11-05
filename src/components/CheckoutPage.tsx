@@ -8,7 +8,12 @@ import {
 } from "@stripe/react-stripe-js";
 import convertToSubcurrency from "@/lib/convertToSubcurrency";
 
-const CheckoutPage = ({ amount }: { amount: number }) => {
+interface CheckoutPageProps {
+  amount: number;
+  description: string;
+}
+
+const CheckoutPage = ({ amount, description }: CheckoutPageProps) => {
   const stripe = useStripe();
   const elements = useElements();
   const [errorMessage, setErrorMessage] = useState<string>();
@@ -16,7 +21,7 @@ const CheckoutPage = ({ amount }: { amount: number }) => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetch("/api/create-payment-intent", {
+    fetch("/api/stripe-payment", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -30,38 +35,88 @@ const CheckoutPage = ({ amount }: { amount: number }) => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoading(true);
-
+  
     if (!stripe || !elements) {
       return;
     }
-
+  
     const { error: submitError } = await elements.submit();
-
+  
     if (submitError) {
       setErrorMessage(submitError.message);
       setLoading(false);
       return;
     }
-
-    const { error } = await stripe.confirmPayment({
-      elements,
-      clientSecret,
-      confirmParams: {
-        return_url: `http://www.localhost:3000/payment-success?amount=${amount}`,
-      },
-    });
-
-    if (error) {
-      // This point is only reached if there's an immediate error when
-      // confirming the payment. Show the error to your customer (for example, payment details incomplete)
-      setErrorMessage(error.message);
-    } else {
-      // The payment UI automatically closes with a success animation.
-      // Your customer is redirected to your `return_url`.
+  
+    let userEmail;
+  
+    // Fetch user email from the API
+    try {
+      const userResponse = await fetch("/api/auth/me");
+      if (!userResponse.ok) {
+        const errorData = await userResponse.json();
+        setErrorMessage(`Failed to fetch user data: ${errorData.error}`);
+        console.error("User data fetch error:", errorData);
+        setLoading(false);
+        return;
+      }
+  
+      const userData = await userResponse.json();
+      userEmail = userData.user.email; // Get email from user data
+    } catch (error) {
+      setErrorMessage("An error occurred while fetching user data.");
+      console.error("User data API call error:", error);
+      setLoading(false);
+      return;
     }
-
+  
+    // Create donation record before confirming payment
+    try {
+      const donationResponse = await fetch("/api/donation", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          amount: amount,
+          description: description,
+          emailProvider: userEmail, // Use the actual email from user data
+          paymentDate: new Date().toISOString(),
+        }),
+      });
+  
+      if (!donationResponse.ok) {
+        const errorData = await donationResponse.json();
+        setErrorMessage(`Failed to create donation: ${errorData.error}`);
+        console.error("Donation creation error:", errorData);
+        setLoading(false); // Stop loading if donation creation fails
+        return;
+      }
+  
+      // Proceed to confirm payment after successful donation creation
+      const { error } = await stripe.confirmPayment({
+        elements,
+        clientSecret,
+        confirmParams: {
+          return_url: `http://www.localhost:3000/payment-success?amount=${amount}`,
+        },
+      });
+  
+      if (error) {
+        // Handle error in payment confirmation
+        setErrorMessage(error.message);
+      } else {
+        // Payment confirmed successfully
+        console.log("Payment confirmed successfully!");
+      }
+    } catch (donationError) {
+      setErrorMessage("An error occurred while creating the donation.");
+      console.error("Donation API call error:", donationError);
+    }
+  
     setLoading(false);
   };
+  
 
   if (!clientSecret || !stripe || !elements) {
     return (

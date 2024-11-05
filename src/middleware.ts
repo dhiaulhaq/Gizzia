@@ -39,7 +39,11 @@ export const middleware = async (request: NextRequest) => {
     });
   }
 
-  if (request.url.includes("/forum") || request.url.includes("/profile")) {
+  if (
+    request.url.includes("/forum") ||
+    request.url.includes("/profile") ||
+    request.url.includes("/donation")
+  ) {
     const token = cookies().get("token");
 
     if (!token) {
