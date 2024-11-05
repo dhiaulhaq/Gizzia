@@ -22,9 +22,16 @@ export default function PostCard({ post, onLikeToggle }: PostCardProps) {
         <div className="flex items-center gap-4 mb-4">
           <Avatar>
             <AvatarImage
-              src={`https://avatar.vercel.sh/${post.user.username}`}
+              src={
+                post?.user.imageProfileUrl ||
+                "/placeholder.svg?height=96&width=96"
+              }
+              alt="Profile picture"
+              className="object-cover"
             />
-            <AvatarFallback>{post.user.name[0]}</AvatarFallback>
+            <AvatarFallback className="flex items-center justify-center text-lg font-bold text-white bg-[#113d1e]">
+              {post?.user.name ? post.user.name[0] : "U"}
+            </AvatarFallback>
           </Avatar>
           <div>
             <h2 className="text-xl font-semibold text-black">{post.title}</h2>

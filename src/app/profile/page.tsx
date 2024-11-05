@@ -1,8 +1,11 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
 import {
   User,
   AtSign,
@@ -14,30 +17,80 @@ import {
   Heart,
   ThumbsUp,
   Eye,
+  MessageSquare,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { formatDistanceToNow } from "date-fns";
 
-export default function Component() {
+type Post = {
+  _id: string;
+  title: string;
+  content: string;
+  category: string;
+  imageUrl?: string;
+  createdAt: string;
+  likes: { length: number };
+  comments: { length: number };
+};
+
+type UserProfile = {
+  _id: string;
+  name?: string;
+  username: string;
+  email: string;
+  gender?: string;
+  dateOfBirth?: string;
+  imageProfileUrl?: string;
+  posts: Post[];
+};
+
+export default function Profile() {
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [loading, setLoading] = useState(true);
+  const { toast } = useToast();
+  const { user } = useAuth();
+
+  useEffect(() => {
+    if (user) {
+      fetchUserProfile();
+    }
+  }, [user]);
+
+  const fetchUserProfile = async () => {
+    try {
+      const response = await fetch(`/api/users/${user?.id}`);
+      if (!response.ok) throw new Error("Failed to fetch profile");
+
+      const data = await response.json();
+      setProfile(data.data);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to load profile data",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading || !profile) {
+    return (
+      <div className="min-h-screen bg-gradient-to-r from-blue-50 to-green-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-r from-blue-50 to-green-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         <header className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 ">User Profile</h1>
-          <div className="flex space-x-2">
-            <Button variant="outline" size="icon">
-              <MessageCircle className="h-5 w-5" />
-            </Button>
-            <Button variant="outline" size="icon">
-              <Activity className="h-5 w-5" />
-            </Button>
-            <Button variant="outline" size="icon">
-              <LogOut className="h-5 w-5" />
-            </Button>
-          </div>
+          <h1 className="text-3xl font-bold text-gray-900">User Profile</h1>
         </header>
 
-        <Card className="relative shadow-lg rounded-lg bg-white border border-gray-200">
+        <Card className="relative shadow-lg rounded-lg bg-white border border-gray-200 mb-8">
           <Link href="/profile/edit" passHref>
             <Button
               variant="ghost"
@@ -51,16 +104,16 @@ export default function Component() {
           <CardHeader className="flex flex-col items-center">
             <Avatar className="h-24 w-24 mb-4 relative overflow-hidden rounded-full shadow-lg border-4 border-gradient-to-r from-blue-500 to-purple-500 transition-transform transform hover:scale-105">
               <AvatarImage
-                src="/placeholder.svg?height=96&width=96"
+                src={profile.imageProfileUrl || "/placeholder.svg"}
                 alt="Profile picture"
                 className="object-cover"
               />
               <AvatarFallback className="flex items-center justify-center text-lg font-bold text-white bg-[#113d1e]">
-                JD
+                {profile.name?.charAt(0) || profile.username.charAt(0)}
               </AvatarFallback>
             </Avatar>
             <CardTitle className="text-2xl font-bold text-gray-900">
-              John Doe
+              {profile.name || profile.username}
             </CardTitle>
           </CardHeader>
 
@@ -68,149 +121,104 @@ export default function Component() {
             <div className="flex items-center space-x-3">
               <User className="h-5 w-5 text-gray-500" />
               <span className="font-semibold text-[#000000]">Name:</span>
-              <span className="text-gray-700">John Doe</span>
+              <span className="text-gray-700">{profile.name || "Not set"}</span>
             </div>
             <div className="flex items-center space-x-3">
               <AtSign className="h-5 w-5 text-gray-500" />
               <span className="font-semibold text-[#000000]">Username:</span>
-              <span className="text-gray-700">johndoe123</span>
+              <span className="text-gray-700">{profile.username}</span>
             </div>
             <div className="flex items-center space-x-3">
               <Mail className="h-5 w-5 text-gray-500" />
               <span className="font-semibold text-[#000000]">Email:</span>
-              <span className="text-gray-700">john.doe@example.com</span>
+              <span className="text-gray-700">{profile.email}</span>
             </div>
             <div className="flex items-center space-x-3">
               <User className="h-5 w-5 text-gray-500" />
               <span className="font-semibold text-[#000000]">Gender:</span>
-              <span className="text-gray-700">Male</span>
+              <span className="text-gray-700">
+                {profile.gender || "Not set"}
+              </span>
             </div>
             <div className="flex items-center space-x-3">
               <Cake className="h-5 w-5 text-gray-500" />
               <span className="font-semibold text-[#000000]">
                 Date of Birth:
               </span>
-              <span className="text-gray-700">1990-01-15</span>
+              <span className="text-gray-700">
+                {profile.dateOfBirth || "Not set"}
+              </span>
             </div>
           </CardContent>
         </Card>
-        <main className="flex-1 p-6">
-          {/* Feed */}
-          <div className="space-y-6">
-            {/* Post 1 */}
-            <div className="rounded-lg bg-white border border-gray-200 p-4">
-              <div className="mb-4">
-                <Image
-                  alt="Gado-gado"
-                  className="h-64 w-full rounded-lg object-cover"
-                  height={256}
-                  src="/gado1.jpg"
-                  width={512}
-                />
-              </div>
-              <div className="mb-4 flex items-center justify-between">
-                <h2 className="text-xl font-semibold text-black">Gado-gado</h2>
-                <Heart className="h-5 w-5 text-gray-500" />
-              </div>
-              <div className="mb-4 flex flex-wrap gap-2">
-                <span className="rounded-full bg-[#113d1e] px-3 py-1 text-sm text-white">
-                  enak
-                </span>
-                <span className="rounded-full bg-[#113d1e] px-3 py-1 text-sm text-white">
-                  makanan
-                </span>
-                <span className="rounded-full bg-[#113d1e] px-3 py-1 text-sm text-white">
-                  gado
-                </span>
-              </div>
-              <div className="mb-4 flex items-center gap-2">
-                <Image
-                  alt="Pavel Gvay"
-                  className="h-8 w-8 rounded-full"
-                  height={32}
-                  src="/Image (1).png"
-                  width={32}
-                />
-                <span className="font-medium text-black">Pavel Gvay</span>
-                <span className="text-sm text-gray-500">• 3 weeks ago</span>
-              </div>
-              <div className="flex items-center justify-between text-sm text-gray-500">
-                <div className="flex items-center gap-6">
-                  <span className="flex items-center gap-1">
-                    <Eye className="h-4 w-4" /> 651,324 Views
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <ThumbsUp className="h-4 w-4" /> 36,654 Likes
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <MessageCircle className="h-4 w-4" /> 56 Comments
-                  </span>
-                </div>
-              </div>
-            </div>
 
-            {/* Post 2 */}
-            <div className="rounded-lg bg-white border border-gray-200 p-4">
-              <div className="mb-4">
-                <Image
-                  alt="Gado-gado di GOP"
-                  className="h-64 w-full rounded-lg object-cover"
-                  height={256}
-                  src="/gado2.webp"
-                  width={512}
-                />
-              </div>
-              <div className="mb-4 flex items-center justify-between">
-                <h2 className="text-xl font-semibold text-black">
-                  gado-gado di GOP nih!!!
-                </h2>
-                <Heart className="h-5 w-5 text-orange-500" />
-              </div>
-              <div className="mb-4 flex flex-wrap gap-2">
-                <span className="rounded-full bg-[#113d1e] px-3 py-1 text-sm text-white">
-                  enak
-                </span>
-                <span className="rounded-full bg-[#113d1e] px-3 py-1 text-sm text-white">
-                  makanan
-                </span>
-                <span className="rounded-full bg-[#113d1e] px-3 py-1 text-sm text-white">
-                  gado-gado
-                </span>
-              </div>
-              <div className="mb-4 flex items-center gap-2">
-                <Image
-                  alt="AR Jakir"
-                  className="h-8 w-8 rounded-full"
-                  height={32}
-                  src="/Image (1).png"
-                  width={32}
-                />
-                <span className="font-medium text-black">AR Jakir</span>
-                <span className="text-sm text-gray-500">• 3 days ago</span>
-              </div>
-              <div className="flex items-center justify-between text-sm text-gray-500">
-                <div className="flex items-center gap-6">
-                  <span className="flex items-center gap-1">
-                    <Eye className="h-4 w-4" /> 244,564 Views
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <ThumbsUp className="h-4 w-4" /> 10,920 Likes
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <MessageCircle className="h-4 w-4" /> 184 Comments
-                  </span>
-                </div>
-              </div>
-            </div>
+        <main className="space-y-6">
+          <h2 className="text-2xl font-bold text-gray-900">My Posts</h2>
+          <div className="grid gap-6">
+            {profile.posts.length === 0 ? (
+              <Card className="p-6 text-center text-gray-500">
+                No posts yet
+              </Card>
+            ) : (
+              profile.posts.map((post) => (
+                <Link href={`/forum/${post._id}`}>
+                  <Card className="p-6 hover:shadow-lg transition-shadow bg-white">
+                    <div className="flex items-center gap-4 mb-4">
+                      <Avatar>
+                        <AvatarImage
+                          src={
+                            profile?.imageProfileUrl ||
+                            "/placeholder.svg?height=96&width=96"
+                          }
+                          alt="Profile picture"
+                          className="object-cover"
+                        />
+                        <AvatarFallback className="flex items-center justify-center text-lg font-bold text-white bg-[#113d1e]">
+                          {profile?.name ? profile.name[0] : "U"}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <h2 className="text-xl font-semibold text-black">
+                          {post.title}
+                        </h2>
+                        <p className="text-sm text-gray-500">
+                          Posted by {profile.username} •{" "}
+                          {formatDistanceToNow(new Date(post.createdAt))} ago
+                        </p>
+                      </div>
+                    </div>
+
+                    {post.imageUrl && (
+                      <img
+                        src={post.imageUrl}
+                        alt={post.title}
+                        className="w-full h-48 object-cover rounded-lg mb-4"
+                      />
+                    )}
+
+                    <p className="mb-4 line-clamp-3 text-gray-600">
+                      {post.content}
+                    </p>
+
+                    <div className="flex items-center gap-4">
+                      <button className="flex items-center text-gray-500">
+                        <Heart className={`mr-2 h-4 w-4`} />
+                        {post.likes.length}
+                      </button>
+                      <div className="flex items-center text-gray-500">
+                        <MessageSquare className="mr-2 h-4 w-4" />
+                        {post.comments.length}
+                      </div>
+                      <span className="text-sm text-gray-500 ml-auto rounded-full bg-[#113d1e] px-3 py-1 text-white">
+                        {post.category}
+                      </span>
+                    </div>
+                  </Card>
+                </Link>
+              ))
+            )}
           </div>
         </main>
-        {/* <button
-                    className="fixed bottom-4 right-4 px-6 py-3 text-white font-semibold rounded-full bg-gradient-to-r from-green-600 to-green-400 shadow-lg
-                        hover:from-green-400 hover:to-green-600 focus:outline-none focus:ring-4 focus:ring-green-300 transition transform hover:scale-105"
-                    onClick={() => window.location.href = '/'}
-                >
-                    Back to Home
-                </button> */}
       </div>
     </div>
   );

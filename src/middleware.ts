@@ -12,10 +12,11 @@ export const middleware = async (request: NextRequest) => {
     console.log(request.method, request.url);
   }
 
-  if (
-    request.url.includes("/api/forum") ||
-    request.url.includes("/api/users")
-  ) {
+  if (request.url.includes("/api/forum")) {
+    // if (
+    //   request.url.includes("/api/forum") ||
+    //   request.url.includes("/api/users")
+    // ) {
     const token = cookies().get("token");
 
     if (!token) {

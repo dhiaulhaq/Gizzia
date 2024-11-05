@@ -57,16 +57,64 @@ export const getUserById = async (id: string) => {
   const db = await getDb();
   const objectId = new ObjectId(id);
 
-  const user = (await db.collection(COLLECTION_USER).findOne(
-    { _id: objectId },
-    {
-      projection: {
-        password: 0,
+  const userWithPosts = await db
+    .collection(COLLECTION_USER)
+    .aggregate([
+      { $match: { _id: objectId } },
+      {
+        $lookup: {
+          from: "Posts",
+          localField: "_id",
+          foreignField: "userId",
+          as: "posts",
+        },
       },
-    }
-  )) as UserModel;
+      {
+        $unwind: {
+          path: "$posts",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $lookup: {
+          from: "Likes",
+          localField: "posts._id",
+          foreignField: "postId",
+          as: "posts.likes",
+        },
+      },
+      {
+        $lookup: {
+          from: "Comments",
+          localField: "posts._id",
+          foreignField: "postId",
+          as: "posts.comments",
+        },
+      },
+      {
+        $group: {
+          _id: "$_id",
+          name: { $first: "$name" },
+          username: { $first: "$username" },
+          email: { $first: "$email" },
+          gender: { $first: "$gender" },
+          dateOfBirth: { $first: "$dateOfBirth" },
+          imageProfileUrl: { $first: "$imageProfileUrl" },
+          createdAt: { $first: "$createdAt" },
+          updatedAt: { $first: "$updatedAt" },
+          posts: { $push: "$posts" },
+        },
+      },
+      {
+        $project: {
+          password: 0,
+          updatedAt: 0,
+        },
+      },
+    ])
+    .toArray();
 
-  return user;
+  return userWithPosts[0] || null;
 };
 
 export const updateUser = async (id: string, req: Request) => {

@@ -28,7 +28,7 @@ const categories = [
 export default function ForumPage() {
   const [posts, setPosts] = useState<PostModel[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [category, setCategory] = useState("all"); // Default to 'all' to show all categories by default
+  const [category, setCategory] = useState("all");
   const debouncedSearch = useDebounce(searchTerm, 500);
 
   const fetchPosts = async () => {
