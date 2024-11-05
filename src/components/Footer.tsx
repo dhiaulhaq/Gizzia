@@ -64,7 +64,7 @@ export default function Component() {
             <ul className="space-y-2">
               <li>
                 <Link href="/donation" className="hover:text-gray-300">
-                  Donate :3
+                  Donate now
                 </Link>
               </li>
               <li>
@@ -90,13 +90,13 @@ export default function Component() {
                 onClick={scrollToTop}
                 className="bg-[#2C472F] hover:bg-[#3A5A3E] text-white rounded-full px-6"
               >
-                Got To Top
+                Go To Top
                 <ArrowUp className="ml-2 h-4 w-4" />
               </Button>
             </div>
           </div>
         </div>
       </div>
-    </footer >
-  )
+    </footer>
+  );
 }

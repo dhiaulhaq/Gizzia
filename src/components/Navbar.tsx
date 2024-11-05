@@ -16,9 +16,12 @@ export default function Navbar({ token, handleFormLogout }: NavbarProps) {
   return (
     <header className="bg-[#1B2E20] w-full">
       <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
-        <Link className="flex items-center gap-2 text-lg font-semibold text-white" href="/">
-                    <img src="/logo.png" className="w-32 h-auto ml-20 mt-4" />
-                </Link>
+        <Link
+          className="flex items-center gap-2 text-lg font-semibold text-white"
+          href="/"
+        >
+          <img src="/logo.png" className="w-32 h-auto mt-4" />
+        </Link>
 
         {/* Hamburger Icon for Mobile */}
         <button
@@ -89,7 +92,7 @@ export default function Navbar({ token, handleFormLogout }: NavbarProps) {
                       className="text-[#e7eae5] hover:text-[#c4f073] w-full"
                       variant="ghost"
                     >
-                      Login
+                      Sign in
                     </Button>
                   </Link>
                   <Link href="/register">
@@ -135,7 +138,7 @@ export default function Navbar({ token, handleFormLogout }: NavbarProps) {
                   className="text-[#e7eae5] hover:text-[#c4f073]"
                   variant="ghost"
                 >
-                  Login
+                  Sign in
                 </Button>
               </Link>
               <Link href="/register">
