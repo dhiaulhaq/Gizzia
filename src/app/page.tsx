@@ -1,7 +1,7 @@
-import Navbar from "@/components/Navbar"
+
 import Banner from "@/components/Banner"
 import FeaturedArticles from "@/components/FeaturedArticles"
-import Footer from "@/components/Footer"
+import AboutUs from "@/components/AboutUs"
 import { ArticleModel, getArticles } from "@/db/models/article"
 
 export default async function Home() {
@@ -11,6 +11,7 @@ export default async function Home() {
       <main>
         <Banner />
         <FeaturedArticles articles={article} />
+        <AboutUs />
       </main>
     </div>
   );
