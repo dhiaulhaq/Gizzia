@@ -35,7 +35,12 @@ export async function POST(request: Request) {
       .join(", ");
 
     // Use Gemini to analyze nutrition
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    const model = genAI.getGenerativeModel({
+      model: "gemini-1.5-pro",
+      generationConfig: {
+        responseMimeType: "application/json",
+      },
+    });
     const prompt = `Analyze the nutritional content of these foods: ${foodLabels}. 
                    Provide a detailed breakdown including:
                    1. Estimated calories per serving
@@ -43,10 +48,11 @@ export async function POST(request: Request) {
                    3. Key vitamins and minerals
                    4. Health benefits
                    5. Any potential allergens or concerns
-                   Format the response in a clear, structured way.`;
+                   Format the response in a clear, structured way following this schema: {"calories": str, "macronutrients": str, "vitamins": str, "healthBenefit": str, "concerns": str}`;
 
     const result2 = await model.generateContent(prompt);
     const response = await result2.response;
+
     const nutritionAnalysis = response.text();
 
     return NextResponse.json({

@@ -17,11 +17,11 @@ import { Textarea } from "@/components/ui/textarea";
 import Link from "next/link";
 
 const categories = [
-  "Technology",
-  "Gaming",
-  "Sports",
-  "Music",
-  "Movies",
+  "Health",
+  "Nutrition",
+  "Fitness",
+  "Lifestyle",
+  "Recipe",
   "Other",
 ];
 
@@ -48,82 +48,92 @@ export default function CreatePostPage() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <Link href="/forum">
-        <Button variant="ghost" className="mb-4">
-          ← Back to Forum
-        </Button>
-      </Link>
-
-      <Card className="max-w-2xl mx-auto p-6">
-        <h1 className="text-2xl font-bold mb-6">Create New Post</h1>
-
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <Label htmlFor="title">Title</Label>
-            <Input
-              id="title"
-              value={formData.title}
-              onChange={(e) =>
-                setFormData({ ...formData, title: e.target.value })
-              }
-              required
-            />
-          </div>
-
-          <div>
-            <Label htmlFor="category">Category</Label>
-            <Select
-              value={formData.category}
-              onValueChange={(value) =>
-                setFormData({ ...formData, category: value })
-              }
-              required
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select a category" />
-              </SelectTrigger>
-              <SelectContent>
-                {categories.map((category) => (
-                  <SelectItem key={category} value={category}>
-                    {category}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div>
-            <Label htmlFor="content">Content</Label>
-            <Textarea
-              id="content"
-              value={formData.content}
-              onChange={(e) =>
-                setFormData({ ...formData, content: e.target.value })
-              }
-              className="min-h-[200px]"
-              required
-            />
-          </div>
-
-          <div>
-            <Label htmlFor="imageUrl">Image URL (optional)</Label>
-            <Input
-              id="imageUrl"
-              type="url"
-              value={formData.imageUrl}
-              onChange={(e) =>
-                setFormData({ ...formData, imageUrl: e.target.value })
-              }
-              placeholder="https://example.com/image.jpg"
-            />
-          </div>
-
-          <Button type="submit" className="w-full">
-            Create Post
+    <main className="min-h-screen bg-[#f8ffe6] p-10 py-12 px-4">
+      <div className="container mx-auto px-4 py-8">
+        <Link href="/forum">
+          <Button variant="ghost" className="mb-4 text-gray-900">
+            ← Back to Forum
           </Button>
-        </form>
-      </Card>
-    </div>
+        </Link>
+
+        <Card className="max-w-2xl mx-auto p-6">
+          <h1 className="text-2xl text-black font-bold mb-6">
+            Create New Post
+          </h1>
+
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <Label htmlFor="title">Title</Label>
+              <Input
+                id="title"
+                value={formData.title}
+                onChange={(e) =>
+                  setFormData({ ...formData, title: e.target.value })
+                }
+                className="bg-gray-200 text-black border-gray-400"
+                required
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="category">Category</Label>
+              <Select
+                value={formData.category}
+                onValueChange={(value) =>
+                  setFormData({ ...formData, category: value })
+                }
+                required
+              >
+                <SelectTrigger className="bg-gray-200 text-gray-400">
+                  <SelectValue placeholder="Select a category" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map((category) => (
+                    <SelectItem
+                      className="bg-gray-200 text-black cursor-pointer hover:text-gray-600"
+                      key={category}
+                      value={category}
+                    >
+                      {category}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div>
+              <Label htmlFor="content">Content</Label>
+              <Textarea
+                id="content"
+                value={formData.content}
+                onChange={(e) =>
+                  setFormData({ ...formData, content: e.target.value })
+                }
+                className="min-h-[200px] bg-gray-200 text-black border-gray-400"
+                required
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="imageUrl">Image URL (optional)</Label>
+              <Input
+                id="imageUrl"
+                type="url"
+                value={formData.imageUrl}
+                onChange={(e) =>
+                  setFormData({ ...formData, imageUrl: e.target.value })
+                }
+                className="bg-gray-200 text-black border-gray-400"
+                placeholder="https://example.com/image.jpg"
+              />
+            </div>
+
+            <Button type="submit" className="w-full bg-[#1B2E20]">
+              Create Post
+            </Button>
+          </form>
+        </Card>
+      </div>
+    </main>
   );
 }

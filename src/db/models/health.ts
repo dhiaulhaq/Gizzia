@@ -129,7 +129,8 @@ export const requestHealth = async (health: HealthParameters) => {
     - Sleep: ${health.lifeStyle.sleep} hours per day.
     - Smoking: ${health.lifeStyle.smoking}.
     - Alcohol: Consumes alcohol in ${health.lifeStyle.alcohol} quantity.
-    - Please provide the health status (Healthy, Less Healthy, Unhealthy) along with a summary following this schema: {"status": str, "summary": str}`;
+    
+    Please provide the health status (Healthy, Less Healthy, Unhealthy) along with a summary following this schema: {"status": str, "summary": str}`;
 
   const generate = await model.generateContent(prompt);
   const response = await generate.response;
