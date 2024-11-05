@@ -18,7 +18,7 @@ export default function PostCard({ post, onLikeToggle }: PostCardProps) {
 
   return (
     <Link href={`/forum/${post._id}`}>
-      <Card className="p-6 hover:shadow-lg transition-shadow">
+      <Card className="p-6 hover:shadow-lg transition-shadow bg-white">
         <div className="flex items-center gap-4 mb-4">
           <Avatar>
             <AvatarImage
@@ -27,7 +27,7 @@ export default function PostCard({ post, onLikeToggle }: PostCardProps) {
             <AvatarFallback>{post.user.name[0]}</AvatarFallback>
           </Avatar>
           <div>
-            <h2 className="text-xl font-semibold">{post.title}</h2>
+            <h2 className="text-xl font-semibold text-black">{post.title}</h2>
             <p className="text-sm text-gray-500">
               Posted by {post.user.name} •{" "}
               {formatDistanceToNow(new Date(post.createdAt))} ago
@@ -43,7 +43,7 @@ export default function PostCard({ post, onLikeToggle }: PostCardProps) {
           />
         )}
 
-        <p className="mb-4 line-clamp-3">{post.content}</p>
+        <p className="mb-4 line-clamp-3 text-gray-600">{post.content}</p>
 
         <div className="flex items-center gap-4">
           <button
@@ -59,7 +59,9 @@ export default function PostCard({ post, onLikeToggle }: PostCardProps) {
             <MessageSquare className="mr-2 h-4 w-4" />
             {post.comments.length}
           </div>
-          <span className="text-sm text-gray-500 ml-auto">{post.category}</span>
+          <span className="text-sm text-gray-500 ml-auto rounded-full bg-[#113d1e] px-3 py-1 text-white">
+            {post.category}
+          </span>
         </div>
       </Card>
     </Link>
