@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Mail, Lock } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function RegisterComponent() {
   const [fullname, setFullname] = useState("");
@@ -13,6 +14,45 @@ export default function RegisterComponent() {
   const [password, setPassword] = useState("");
   const [gender, setGender] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/register`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: fullname,
+            username,
+            email,
+            password,
+            gender,
+            dateOfBirth,
+          }),
+        }
+      );
+
+      const result = await res.json();
+
+      if (!res.ok) {
+        throw new Error(result.error || "Something went wrong");
+      }
+
+      router.push("/login");
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="relative flex min-h-screen">
@@ -37,7 +77,7 @@ export default function RegisterComponent() {
             </p>
           </div>
 
-          <form className="space-y-6">
+          <form className="space-y-6" onSubmit={handleSubmit}>
             <div className="space-y-4">
               {/* Fullname */}
               <Input
@@ -105,9 +145,15 @@ export default function RegisterComponent() {
             </div>
 
             {/* Submit button */}
-            <Button className="w-full h-12 bg-green-700 hover:bg-green-600">
-              Sign Up
+            <Button
+              className="w-full h-12 bg-green-700 hover:bg-green-600"
+              disabled={loading}
+            >
+              {loading ? "Registering..." : "Sign Up"}
             </Button>
+
+            {/* Error message */}
+            {error && <p className="text-center text-red-500">{error}</p>}
 
             <p className="text-center text-sm text-gray-300">
               Already have an account?{" "}

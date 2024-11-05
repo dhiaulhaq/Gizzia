@@ -1,4 +1,3 @@
-// Import dependencies
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { getUserByEmail } from "@/db/models/user";
@@ -50,16 +49,16 @@ export const POST = async (req: NextRequest) => {
 
   const token = signToken(payload);
 
-  const response = NextResponse.redirect(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/`
-  );
+  // const response = NextResponse.redirect(
+  //   `${process.env.NEXT_PUBLIC_BASE_URL}/`
+  // );
 
-  response.cookies.set("token", token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    expires: new Date(Date.now() + 1000 * 60 * 60), // 1 hour
-    sameSite: "strict",
-  });
+  // response.cookies.set("token", token, {
+  //   httpOnly: true,
+  //   secure: process.env.NODE_ENV === "production",
+  //   expires: new Date(Date.now() + 1000 * 60 * 60), // 1 hour
+  //   sameSite: "strict",
+  // });
 
   const result = NextResponse.json({
     token,

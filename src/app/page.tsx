@@ -8,12 +8,10 @@ export default async function Home() {
   const article: ArticleModel[] = await getArticles()
   return (
     <div>
-      <Navbar />
       <main>
         <Banner />
         <FeaturedArticles articles={article} />
       </main>
-      <Footer />
     </div>
   );
 }

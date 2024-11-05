@@ -107,7 +107,29 @@ export const requestHealth = async (health: HealthParameters) => {
     },
   });
 
-  const prompt = `Tolong cek tingkat kesehatan saya berdasarkan parameter berikut: 1. Parameter Fisik: - Berat Badan: ${health.physicalParameters.bodyWeight} kg, - Tinggi Badan: ${health.physicalParameters.bodyHeight} cm, - Tekanan Darah: ${health.physicalParameters.bloodPressure} mmHg, - Detak Jantung: ${health.physicalParameters.heartRate} bpm, - Kebiasaan Olahraga: ${health.physicalParameters.exerciseHabit.name} ${health.physicalParameters.exerciseHabit.interval} kali seminggu selama ${health.physicalParameters.exerciseHabit.duration} menit. 2. Riwayat Kesehatan: - Riwayat Penyakit: ${health.medicalHistory.medicalHistory}, - Kesehatan Mental: ${health.medicalHistory.mentalHealth}. 3. Pola Makan: - Konsumsi Makanan: Makan ${health.eatingHabit.foodConsumption.interval} kali sehari dengan porsi ${health.eatingHabit.foodConsumption.portion} dan biasanya memakan ${health.eatingHabit.foodConsumption.food}. - Kebiasaan Makan: Sarapan = ${health.eatingHabit.eatingHabits.breakfast}, Makan Siang = ${health.eatingHabit.eatingHabits.lunch}, Makan Malam = ${health.eatingHabit.eatingHabits.dinner}. - Hidrasi: Minum sekitar ${health.eatingHabit.hydration} liter sehari. 4. Gaya Hidup: - Tidur: ${health.lifeStyle.sleep} jam sehari. - Merokok: ${health.lifeStyle.smoking}. - Alkohol: Mengonsumsi alkohol dalam jumlah ${health.lifeStyle.alcohol}. Tolong berikan status kesehatannya (Sehat, Kurang Sehat, Tidak Sehat) beserta kesimpulannya dengan skema ini: {"status": str, "summary": str}`;
+  const prompt = `Please check my health status based on the following parameters:
+
+    1. Physical Parameters:
+    - Body Weight: ${health.physicalParameters.bodyWeight} kg.
+    - Height: ${health.physicalParameters.bodyHeight} cm.
+    - Blood Pressure: ${health.physicalParameters.bloodPressure} mmHg.
+    - Heart Rate: ${health.physicalParameters.heartRate} bpm.
+    - Exercise Habit: ${health.physicalParameters.exerciseHabit.name}, ${health.physicalParameters.exerciseHabit.interval} times per week for ${health.physicalParameters.exerciseHabit.duration} minutes.
+
+    2. Medical History:
+    - Medical Conditions: ${health.medicalHistory.medicalHistory}.
+    - Mental Health: ${health.medicalHistory.mentalHealth}.
+
+    3. Eating Pattern:
+    - Food Consumption: Eating ${health.eatingHabit.foodConsumption.interval} times a day with portion sizes of ${health.eatingHabit.foodConsumption.portion}, usually including ${health.eatingHabit.foodConsumption.food}.
+    - Meal Habits: Breakfast = ${health.eatingHabit.eatingHabits.breakfast}, Lunch = ${health.eatingHabit.eatingHabits.lunch}, Dinner = ${health.eatingHabit.eatingHabits.dinner}.
+    - Hydration: Drinking about ${health.eatingHabit.hydration} liters per day.
+
+    4. Lifestyle:
+    - Sleep: ${health.lifeStyle.sleep} hours per day.
+    - Smoking: ${health.lifeStyle.smoking}.
+    - Alcohol: Consumes alcohol in ${health.lifeStyle.alcohol} quantity.
+    - Please provide the health status (Healthy, Less Healthy, Unhealthy) along with a summary following this schema: {"status": str, "summary": str}`;
 
   const generate = await model.generateContent(prompt);
   const response = await generate.response;
