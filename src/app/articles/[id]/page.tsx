@@ -61,7 +61,7 @@ const ArticleDetail = async ({ params }: { params: idType }) => {
       <section className="w-full bg-white px-4 py-6">
         <div className="container mx-auto max-w-6xl px-4 py-8">
           <div className="mb-8 flex items-center gap-2">
-            <h2 className="text-xl font-medium text-blue-500">
+            <h2 className="text-xl font-medium text-green-600">
               {data?.category} Articles
             </h2>
           </div>
@@ -88,23 +88,11 @@ const ArticleDetail = async ({ params }: { params: idType }) => {
                 {data?.tags.map((tags, index) => (
                   <span
                     key={index}
-                    className="inline-block rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800"
+                    className="inline-block rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-600 capitalize"
                   >
                     {tags}
                   </span>
                 ))}
-              </div>
-
-              <div className="flex items-center gap-4">
-                <span className="text-sm font-medium text-gray-700">
-                  Share with
-                </span>
-                <button className="rounded-full bg-gray-100 p-2 hover:bg-gray-200">
-                  <Facebook className="h-5 w-5 text-gray-600" />
-                </button>
-                <button className="rounded-full bg-gray-100 p-2 hover:bg-gray-200">
-                  <Twitter className="h-5 w-5 text-gray-600" />
-                </button>
               </div>
             </div>
           </div>

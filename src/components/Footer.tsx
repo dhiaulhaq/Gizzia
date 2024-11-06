@@ -71,11 +71,6 @@ export default function Component() {
                   Donate now
                 </Link>
               </li>
-              <li>
-                <Link href="#" className="hover:text-gray-300">
-                  Advertise your business!
-                </Link>
-              </li>
             </ul>
           </div>
           {/* Chatbot and Go to Top Section */}
