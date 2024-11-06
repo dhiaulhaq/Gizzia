@@ -3,6 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { verifyTokenJose } from "./lib/jwt";
 
 export const middleware = async (request: NextRequest) => {
+  const token = cookies().get("token");
+
   if (
     !request.url.includes("/api") &&
     !request.url.includes("_next/static") &&
@@ -17,8 +19,6 @@ export const middleware = async (request: NextRequest) => {
     request.url.includes("/api/users") ||
     request.url.includes("/api/donation")
   ) {
-    const token = cookies().get("token");
-
     if (!token) {
       return NextResponse.json({
         statusCode: 401,
@@ -44,8 +44,6 @@ export const middleware = async (request: NextRequest) => {
     request.url.includes("/profile") ||
     request.url.includes("/donation")
   ) {
-    const token = cookies().get("token");
-
     if (!token) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
@@ -55,6 +53,13 @@ export const middleware = async (request: NextRequest) => {
     );
 
     return NextResponse.next();
+  }
+
+  if (
+    token &&
+    (request.url.includes("/login") || request.url.includes("/register"))
+  ) {
+    return NextResponse.redirect(new URL("/", request.url));
   }
 
   return NextResponse.next();
