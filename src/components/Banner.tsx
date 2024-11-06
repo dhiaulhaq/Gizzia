@@ -6,9 +6,9 @@ export default function Component() {
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
         <div className="space-y-6">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold text-[#424242] leading-tight">
-            Check the food you consume,{" "}
-            <span className="text-[#B4D767] block">
-              we will recommend healthy food and lifestyle
+            Discover What's in Your Food{" "}
+            <span className="text-[#B4D767] block pt-5">
+              Get Personalized Health and Nutrition Tips!
             </span>
           </h1>
         </div>
