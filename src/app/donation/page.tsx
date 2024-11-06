@@ -22,17 +22,17 @@ if (process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY === undefined) {
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
 
 export default function Donation() {
-  const [amount, setAmount] = useState<number>(0.99);
-  const [description, setDescription] = useState<string>("");
-  const [error, setError] = useState<string | null>(null);
+  const [amount, setAmount] = useState<number>(0.5)
+  const [description, setDescription] = useState<string>('')
+  const [error, setError] = useState<string | null>(null)
 
   const handleAmountChange = (event: ChangeEvent<HTMLInputElement>) => {
     const newAmount = parseFloat(event.target.value);
 
     if (isNaN(newAmount) || newAmount <= 0) {
-      setError("Please input a valid donation amount");
+      setError('We kindly request a minimum donation is $0.5')
     } else if (newAmount < 0.5) {
-      setError("Minimum donation is $0.50");
+      setError('We kindly request a minimum donation is $0.5')
     } else {
       setError(null);
       setAmount(newAmount);
