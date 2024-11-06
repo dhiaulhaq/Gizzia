@@ -35,21 +35,21 @@ const CheckoutPage = ({ amount, description }: CheckoutPageProps) => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoading(true);
-  
+
     if (!stripe || !elements) {
       return;
     }
-  
+
     const { error: submitError } = await elements.submit();
-  
+
     if (submitError) {
       setErrorMessage(submitError.message);
       setLoading(false);
       return;
     }
-  
+
     let userEmail;
-  
+
     // Fetch user email from the API
     try {
       const userResponse = await fetch("/api/auth/me");
@@ -60,7 +60,7 @@ const CheckoutPage = ({ amount, description }: CheckoutPageProps) => {
         setLoading(false);
         return;
       }
-  
+
       const userData = await userResponse.json();
       userEmail = userData.user.email; // Get email from user data
     } catch (error) {
@@ -69,7 +69,7 @@ const CheckoutPage = ({ amount, description }: CheckoutPageProps) => {
       setLoading(false);
       return;
     }
-  
+
     // Create donation record before confirming payment
     try {
       const donationResponse = await fetch("/api/donation", {
@@ -84,7 +84,7 @@ const CheckoutPage = ({ amount, description }: CheckoutPageProps) => {
           paymentDate: new Date().toISOString(),
         }),
       });
-  
+
       if (!donationResponse.ok) {
         const errorData = await donationResponse.json();
         setErrorMessage(`Failed to create donation: ${errorData.error}`);
@@ -92,7 +92,7 @@ const CheckoutPage = ({ amount, description }: CheckoutPageProps) => {
         setLoading(false); // Stop loading if donation creation fails
         return;
       }
-  
+
       // Proceed to confirm payment after successful donation creation
       const { error } = await stripe.confirmPayment({
         elements,
@@ -101,7 +101,7 @@ const CheckoutPage = ({ amount, description }: CheckoutPageProps) => {
           return_url: `http://www.localhost:3000/payment-success?amount=${amount}`,
         },
       });
-  
+
       if (error) {
         // Handle error in payment confirmation
         setErrorMessage(error.message);
@@ -113,16 +113,15 @@ const CheckoutPage = ({ amount, description }: CheckoutPageProps) => {
       setErrorMessage("An error occurred while creating the donation.");
       console.error("Donation API call error:", donationError);
     }
-  
+
     setLoading(false);
   };
-  
 
   if (!clientSecret || !stripe || !elements) {
     return (
       <div className="flex items-center justify-center">
         <div
-          className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite] dark:text-white"
+          className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-surface text-gray-300 motion-reduce:animate-[spin_1.5s_linear_infinite]"
           role="status"
         >
           <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
@@ -141,7 +140,7 @@ const CheckoutPage = ({ amount, description }: CheckoutPageProps) => {
 
       <button
         disabled={!stripe || loading}
-        className="text-white w-full p-5 bg-black mt-2 rounded-md font-bold disabled:opacity-50 disabled:animate-pulse"
+        className="text-white w-full p-5 bg-green-900 mt-2 rounded-md font-bold disabled:opacity-50 disabled:animate-pulse"
       >
         {!loading ? `Pay $${amount}` : "Processing..."}
       </button>
