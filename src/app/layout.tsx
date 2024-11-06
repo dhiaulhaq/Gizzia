@@ -70,7 +70,7 @@ export default function RootLayout({
                 />
               </a>
               <p className="absolute bottom-0 m-0 p-0 text-[#77aca4] font-extrabold text-lg text-center">
-                GizzAI
+                Mr. Gizz
               </p>
             </div>
           )}
